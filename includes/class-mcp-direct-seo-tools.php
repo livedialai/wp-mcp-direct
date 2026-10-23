@@ -140,7 +140,7 @@ class MCP_Direct_SEO_Tools {
         if (!is_dir($dir)) {
             wp_mkdir_p($dir);
         }
-        return array($dir, trailingslashit($up['baseurl']) . self::DIR);
+        return array($dir, trailingslashit(trailingslashit($up['baseurl']) . self::DIR));
     }
 
     private static function iso($post) {
