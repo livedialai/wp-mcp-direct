@@ -4,7 +4,7 @@
 
 > English: Self-hosted MCP server plugin for WordPress/WooCommerce. Connects AI clients directly via Streamable HTTP + API key — no third-party cloud in between.
 
-## Was es kann (11 Werkzeuge)
+## Was es kann (16 Werkzeuge)
 
 | Bereich | Werkzeug | Zweck |
 |---|---|---|
@@ -17,6 +17,28 @@
 | | `woocommerce_update_products` | Preise, Lager, Beschreibungen, Kategorien in Masse |
 | Dateien | `fs_list`, `fs_read`, `fs_write` | Dateien unter wp-content (Theme/Plugin) — Schreiben mit Auto-Backup |
 | Menüs | `menus` | Menüs anlegen/ändern, Positionen zuweisen |
+| **SEO** | `sitemap_build` | Sitemap-Index + Unterseiten als XML erzeugen (ohne Yoast), automatisch aufgeteilt |
+| | `indexnow_submit` | URLs sofort an Bing/Yandex/Seznam melden (Key-Datei wird selbst angelegt) |
+| | `seo_audit` | Fehlende/zu lange Titel, fehlende Descriptions, noindex, Sitemap-Abdeckung, robots.txt |
+| | `seo_meta_set` | SEO-Titel, Meta-Description, noindex je Inhalt setzen (Ausgabe im `<head>`) |
+| | `robots_txt` | robots.txt lesen oder Zusatzzeilen setzen (z. B. Sitemap-Verweis) |
+
+### SEO-Tools im Detail
+
+```
+sitemap_build   types[], per_file (Standard 5000), include_taxonomies
+                → schreibt sitemap-<typ>-<n>.xml + sitemap-index.xml nach
+                  wp-content/uploads/mcp-seo/ und liefert die öffentlichen URLs
+indexnow_submit urls[]  ODER  all=true + limit + types[]
+                → legt <key>.txt im Webroot an, POST an api.indexnow.org
+seo_audit       types[], limit
+                → Kennzahlen je Inhaltstyp + Beispiele; liest Yoast-/RankMath-Felder mit
+seo_meta_set    post_id, title, description, noindex
+robots_txt      action=read|write, content
+```
+
+Damit ist das Plugin ein SEO-Werkzeug für Seiten mit sehr vielen Inhalten
+(z. B. Verzeichnisse mit 450.000 Profilen), ohne zusätzliches SEO-Plugin.
 
 ## Voraussetzungen
 

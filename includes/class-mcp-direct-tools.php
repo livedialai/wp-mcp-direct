@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) {
 class MCP_Direct_Tools {
 
     public static function definitions() {
-        return array(
+        return array_merge(array(
             self::def_site_info(),
             self::def_rest_request(),
             self::def_post_save(),
@@ -22,7 +22,7 @@ class MCP_Direct_Tools {
             self::def_fs_read(),
             self::def_fs_write(),
             self::def_menus(),
-        );
+        ), MCP_Direct_SEO_Tools::definitions());
     }
 
     /** Tool ausfuehren. Rueckgabe: String (Text/JSON) oder WP_Error. */
@@ -41,6 +41,9 @@ class MCP_Direct_Tools {
                 case 'fs_write': return self::t_fs_write($args);
                 case 'menus': return self::t_menus($args);
                 default:
+                    if (class_exists('MCP_Direct_SEO_Tools') && in_array($name, MCP_Direct_SEO_Tools::names(), true)) {
+                        return MCP_Direct_SEO_Tools::call($name, $args);
+                    }
                     return new WP_Error('mcp_direct_unknown_tool', 'Unbekanntes Tool: ' . $name);
             }
         } catch (Throwable $e) {
