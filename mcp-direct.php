@@ -43,6 +43,10 @@ add_action('wp_head', function () {
     }
     $id = get_queried_object_id();
     $desc = get_post_meta($id, '_mcp_seo_description', true);
+    // Andere Module (z. B. Sprachversionen) koennen die Ausgabe unterdruecken.
+    if (!empty($GLOBALS['mcp_seo_skip_description'])) {
+        $desc = '';
+    }
     if ($desc) {
         echo '<meta name="description" content="' . esc_attr($desc) . '">' . "\n";
     }
