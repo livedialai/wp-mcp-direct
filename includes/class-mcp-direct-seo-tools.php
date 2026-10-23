@@ -212,6 +212,26 @@ class MCP_Direct_SEO_Tools {
             }
         }
 
+        // Eigene Datenquellen (z. B. Plugin-Tabellen) koennen Sitemaps beisteuern.
+        // Filter: mcp_seo_sitemap_providers -> Array von Callables
+        // Signatur: function(string $dir, string $baseUrl, int $perFile): array
+        // Rueckgabe: array(array('loc'=>..., 'type'=>..., 'count'=>...), ...)
+        $providers = apply_filters('mcp_seo_sitemap_providers', array());
+        foreach ((array) $providers as $provider) {
+            if (!is_callable($provider)) {
+                continue;
+            }
+            $extra = call_user_func($provider, $dir, $base, $per);
+            if (is_array($extra)) {
+                foreach ($extra as $e) {
+                    if (!empty($e['loc'])) {
+                        $index_entries[] = $e;
+                        $total += (int) ($e['count'] ?? 0);
+                    }
+                }
+            }
+        }
+
         if (!empty($args['include_taxonomies'])) {
             $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
             $terms = get_terms(array('taxonomy' => get_taxonomies(array('public' => true)), 'hide_empty' => true, 'number' => 5000));
